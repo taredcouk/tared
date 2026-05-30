@@ -1,0 +1,33 @@
+services:
+  tared-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tared-ltd:2026-05-30
+    container_name: tared-web
+    restart: unless-stopped
+    expose:
+      - "3001"
+    environment:
+      VIRTUAL_HOST: tared.co.uk,www.tared.co.uk
+      LETSENCRYPT_HOST: tared.co.uk,www.tared.co.uk
+      LETSENCRYPT_EMAIL: admin@tared.co.uk
+      VIRTUAL_PORT: "3001"
+      TZ: UTC
+    networks:
+      - docker
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 256
+    mem_limit: 512m
+    cpus: 1.0
+
+networks:
+  docker:
+    external: true
+    name: docker
