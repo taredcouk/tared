@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
+  const forwardedHost = request.headers
+    .get("x-forwarded-host")
+    ?.split(",", 1)[0]
+    .trim();
+  const requestHost = (forwardedHost ?? request.headers.get("host") ?? "")
+    .split(":", 1)[0]
+    .toLowerCase();
+
+  if (requestHost === "www.tared.co.uk") {
+    const canonicalUrl = request.nextUrl.clone();
+    canonicalUrl.protocol = "https:";
+    canonicalUrl.hostname = "tared.co.uk";
+    canonicalUrl.port = "";
+
+    return NextResponse.redirect(canonicalUrl, 301);
+  }
+
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const isDev = process.env.NODE_ENV !== "production";
 

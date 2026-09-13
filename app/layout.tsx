@@ -11,6 +11,10 @@ const mRounded = M_PLUS_Rounded_1c({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://tared.co.uk"),
+  alternates: {
+    canonical: "/",
+  },
   title: "Tared Ltd - Design and Advertising Agency | London",
   description: "Professional design and advertising agency specializing in graphic design, motion design and advertising video production for online advertising. Based in London, UK.",
   keywords: "design, advertising agency, graphic design, motion design, 2D design, 3D design, advertising video production, London, UK",
@@ -18,12 +22,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Tared Ltd - Design and Advertising Agency",
     description: "Professional design and advertising agency specializing in graphic design, motion design and advertising video production for online advertising. Based in London, UK.",
-    url: "https://www.tared.co.uk",
+    url: "https://tared.co.uk/",
     type: "website",
     locale: "en_GB",
     images: [
       {
-        url: "https://tared.co.uk/og/og-image.jpg",
+        url: "/og/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Tared Open Graph Image",
