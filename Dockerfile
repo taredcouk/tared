@@ -7,14 +7,14 @@
 # - Use the same supported Node LTS patch and Alpine ABI for all stages.
 # - The exact Node and Alpine versions make rebuilds reproducible by tag.
 
-FROM node:24.21.0-alpine3.22 AS deps
+FROM node:24.21.0-alpine3.24 AS deps
 WORKDIR /app
 
 # Install dependencies deterministically from lockfile.
 COPY package*.json ./
 RUN npm ci
 
-FROM node:24.21.0-alpine3.22 AS builder
+FROM node:24.21.0-alpine3.24 AS builder
 WORKDIR /app
 
 # Reuse deterministic node_modules from deps stage.
@@ -27,7 +27,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Build standalone output.
 RUN npm run build
 
-FROM node:24.21.0-alpine3.22 AS runner
+FROM node:24.21.0-alpine3.24 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

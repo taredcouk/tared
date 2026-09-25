@@ -13,7 +13,7 @@ services:
       LETSENCRYPT_HOST: tared.co.uk,www.tared.co.uk
       LETSENCRYPT_EMAIL: admin@tared.co.uk
       VIRTUAL_PORT: "3001"
-      VIRTUAL_NETWORK: tared-proxy
+      VIRTUAL_NETWORK: docker
       TZ: UTC
     networks:
       - tared-proxy
@@ -37,4 +37,4 @@ services:
 networks:
   tared-proxy:
     external: true
-    name: tared-proxy
+    name: docker
