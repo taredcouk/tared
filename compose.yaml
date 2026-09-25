@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: tared-ltd:2026-05-30
+    image: tared-ltd:2026-09-25
     container_name: tared-web
     restart: unless-stopped
     expose:
@@ -13,12 +13,14 @@ services:
       LETSENCRYPT_HOST: tared.co.uk,www.tared.co.uk
       LETSENCRYPT_EMAIL: admin@tared.co.uk
       VIRTUAL_PORT: "3001"
+      VIRTUAL_NETWORK: tared-proxy
       TZ: UTC
     networks:
-      - docker
+      - tared-proxy
     read_only: true
     tmpfs:
-      - /tmp
+      - /tmp:rw,noexec,nosuid,size=64m
+      - /app/.next/cache:rw,noexec,nosuid,size=128m,uid=10001,gid=10001,mode=0700
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -26,8 +28,13 @@ services:
     pids_limit: 256
     mem_limit: 512m
     cpus: 1.0
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
-  docker:
+  tared-proxy:
     external: true
-    name: docker
+    name: tared-proxy

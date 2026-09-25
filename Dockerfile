@@ -4,17 +4,17 @@
 # Hardened Next.js production image
 # ------------------------------------------------------------------------------
 # Notes:
-# - Keep builder/runtime on Node 22 for ABI consistency.
-# - Image digests pinned on 2026-05-30.
+# - Use the same supported Node LTS patch and Alpine ABI for all stages.
+# - The exact Node and Alpine versions make rebuilds reproducible by tag.
 
-FROM node:22.16.0-alpine3.22@sha256:41e4389f3d988d2ed55392df4db1420ad048ae53324a8e2b7c6d19508288107e AS deps
+FROM node:24.21.0-alpine3.22 AS deps
 WORKDIR /app
 
 # Install dependencies deterministically from lockfile.
 COPY package*.json ./
 RUN npm ci
 
-FROM node:22.16.0-alpine3.22@sha256:41e4389f3d988d2ed55392df4db1420ad048ae53324a8e2b7c6d19508288107e AS builder
+FROM node:24.21.0-alpine3.22 AS builder
 WORKDIR /app
 
 # Reuse deterministic node_modules from deps stage.
@@ -27,18 +27,21 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Build standalone output.
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs22-debian12:nonroot@sha256:13593b7570658e8477de39e2f4a1dd25db2f836d68a0ba771251572d23bb4f8e AS runner
+FROM node:24.21.0-alpine3.22 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3001
 ENV HOSTNAME=0.0.0.0
 ENV NEXT_TELEMETRY_DISABLED=1
+RUN addgroup -g 10001 -S nextjs && adduser -u 10001 -S -G nextjs nextjs
 
 # Copy only runtime artifacts with non-root ownership.
-COPY --from=builder --chown=nonroot:nonroot /app/public ./public
-COPY --from=builder --chown=nonroot:nonroot /app/.next/standalone ./
-COPY --from=builder --chown=nonroot:nonroot /app/.next/static ./.next/static
+COPY --from=builder --chown=10001:10001 /app/public ./public
+COPY --from=builder --chown=10001:10001 /app/.next/standalone ./
+COPY --from=builder --chown=10001:10001 /app/.next/static ./.next/static
+
+USER 10001:10001
 
 EXPOSE 3001
 
@@ -47,4 +50,4 @@ LABEL org.opencontainers.image.title="tared-ltd"
 LABEL org.opencontainers.image.description="Next.js production image"
 
 # Distroless node entrypoint executes server.js directly.
-CMD ["server.js"]
+CMD ["node", "server.js"]
