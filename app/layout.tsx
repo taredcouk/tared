@@ -7,7 +7,7 @@ import GoogleAnalyticsScript from "./GoogleAnalyticsScript";
 const mRounded = M_PLUS_Rounded_1c({
   variable: "--font-mRounded",
   subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "800", "900"]
+  weight: ["400", "500", "700", "900"]
 })
 
 export const metadata: Metadata = {

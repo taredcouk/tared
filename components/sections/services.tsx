@@ -30,7 +30,7 @@ export default function Services() {
   return (
     <div id="services" className="py-20 px-4 bg-primary">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-white text-3xl md:text-4xl font-bold text-center mb-12"></h2>
+        <h2 className="text-white text-3xl md:text-4xl font-bold text-center mb-12">Our Services</h2>
         <div className="flex flex-wrap gap-6">
           
           <div className="border-2 border-white rounded-xl shadow-sm bg-transparent hover:bg-white/5 transition-colors duration-300 flex-1 min-w-[300px] md:min-w-0 md:flex-[0_1_calc(50%-12px)]">
